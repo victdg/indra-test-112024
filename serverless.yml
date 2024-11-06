@@ -1,0 +1,17 @@
+service: indra-integration-test1
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  hello:
+    handler: src/hello.handler
+    events:
+      - httpApi: get /hello
+
+plugins:
+  # - serverless-esbuild
+  - serverless-offline
