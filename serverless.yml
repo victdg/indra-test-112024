@@ -1,17 +1,40 @@
-service: indra-integration-test1
+service: indra-integration-test
 
 useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs18.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:Scan
+      Resource:
+        - "*"
+
+resources:
+  Resources:
+    StarWarsMovies:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: StarWarsMovies
+        AttributeDefinitions:
+          - AttributeName: idMovie
+            AttributeType: S
+        KeySchema:
+          - AttributeName: idMovie
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 functions:
-  hello:
-    handler: src/hello.handler
+  getMovieHttp:
+    handler: src/getMovie.handler
     events:
-      - httpApi: get /hello
+      - httpApi: get /getMovie
 
 plugins:
-  # - serverless-esbuild
   - serverless-offline
