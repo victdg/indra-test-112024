@@ -1,5 +1,6 @@
 export const constants = {
   FILMS_URL: "https://swapi.py4e.com/api/films/",
+  TABLE_NAME: "Orders",
   CODES: {
     200: {
       statusCode: 200,

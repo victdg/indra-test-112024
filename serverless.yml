@@ -16,15 +16,15 @@ provider:
 
 resources:
   Resources:
-    StarWarsMovies:
+    Orders:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: StarWarsMovies
+        TableName: Orders
         AttributeDefinitions:
-          - AttributeName: idMovie
+          - AttributeName: nombreCliente
             AttributeType: S
         KeySchema:
-          - AttributeName: idMovie
+          - AttributeName: nombreCliente
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
