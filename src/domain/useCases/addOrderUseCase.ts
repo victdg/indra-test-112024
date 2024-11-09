@@ -1,15 +1,15 @@
 import { DataFilmModel } from "../../infrastructure/driven/repositories/OrderDataModel";
 import { OrdersRepositoryInterface } from "../../infrastructure/driven/repositories/OrdersRepositoryInterface";
 import { FilmServicesInterface } from "../../infrastructure/driven/services/FilmServicesInterface";
-import { constants, mapper } from "../../utils";
+import { constants, mapper, responseObjectMaker } from "../../utils";
 import { AddOrderRequest } from "../models/AddOrderRequest";
 import { UseCaseResponse } from "../models/UseCaseResponse";
 
-interface UseCaseType {
+export interface AddOrderUseCaseType {
   execute(request: AddOrderRequest): Promise<UseCaseResponse<undefined>>;
 }
 
-export class AddOrderUseCase implements UseCaseType {
+export class AddOrderUseCase implements AddOrderUseCaseType {
   ordersRepository: OrdersRepositoryInterface;
   filmServices: FilmServicesInterface;
 
@@ -24,12 +24,15 @@ export class AddOrderUseCase implements UseCaseType {
     this.filmServices = filmServices;
   }
   async execute(request: AddOrderRequest) {
+    console.log("request::>>", request);
     try {
-      if (request.body.idEpisodio === undefined) {
-        return {
+      if (
+        request.body.idEpisodio === undefined ||
+        request.body.nombreCliente === undefined
+      ) {
+        return responseObjectMaker({
           statusCode: constants.CODES[400].statusCode,
-          message: constants.CODES[400].message,
-        };
+        });
       }
 
       const getFilmResponse = await this.filmServices.getFilm(
@@ -37,20 +40,17 @@ export class AddOrderUseCase implements UseCaseType {
       );
 
       if (getFilmResponse.statusCode === constants.CODES[404].statusCode) {
-        return {
-          statusCode: constants.CODES[422].statusCode,
-          code: constants.CODES[422].code,
+        return responseObjectMaker({
+          statusCode: constants.CODES[404].statusCode,
           message: `No se encontró el idEpisodio: ${request.body.idEpisodio}`,
-        };
+        });
       }
 
       if (getFilmResponse.statusCode !== constants.CODES[200].statusCode) {
         const statusCode = getFilmResponse.statusCode;
-        return {
-          statusCode,
-          code: constants.CODES[statusCode],
-          message: constants.CODES[statusCode],
-        };
+        return responseObjectMaker({
+          statusCode: constants.CODES[503].statusCode,
+        });
       }
 
       const dataFilm = getFilmResponse.data!;
@@ -58,30 +58,32 @@ export class AddOrderUseCase implements UseCaseType {
 
       const putOrderResponse = await this.ordersRepository.putOrder({
         nombreCliente: request.body.nombreCliente,
-        fechaRegistro: new Date().toLocaleString(),
+        fechaRegistro: new Date().toLocaleString("en-GB", {
+          timeZone: "America/Lima",
+          hour12: false,
+        }),
         idEpisodio: request.body.idEpisodio,
         dataFilm: <Omit<DataFilmModel, "idEpisodio">>mapper(dataFilmInput),
       });
 
+      console.log("putOrderResponse::>>", putOrderResponse);
+
       if (putOrderResponse.statusCode !== constants.CODES[200].statusCode) {
         const statusCode = putOrderResponse.statusCode;
-        return {
-          statusCode,
-          code: constants.CODES[statusCode].code,
-          message: constants.CODES[statusCode].message,
-        };
+        return responseObjectMaker({
+          statusCode: constants.CODES[503].statusCode,
+        });
       }
 
-      return {
+      return responseObjectMaker({
         statusCode: constants.CODES[200].statusCode,
         code: constants.CODES[200].code,
-      };
+      });
     } catch (error) {
-      return {
+      console.log("useCase error::>>", error.message);
+      return responseObjectMaker({
         statusCode: constants.CODES[500].statusCode,
-        code: constants.CODES[500].code,
-        message: constants.CODES[500].message,
-      };
+      });
     }
   }
 }

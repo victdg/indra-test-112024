@@ -1,4 +1,4 @@
-service: indra-integration-test
+service: indra-technical-test-victor-zubiaga
 
 useDotenv: true
 
@@ -8,9 +8,7 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:PutItem
-        - dynamodb:GetItem
-        - dynamodb:Scan
+        - dynamodb:Query
       Resource:
         - "*"
 
@@ -23,18 +21,27 @@ resources:
         AttributeDefinitions:
           - AttributeName: nombreCliente
             AttributeType: S
+          - AttributeName: fechaRegistro
+            AttributeType: S
         KeySchema:
           - AttributeName: nombreCliente
             KeyType: HASH
+          - AttributeName: fechaRegistro
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
 functions:
-  getMovieHttp:
-    handler: src/getMovie.handler
+  getOrdersHttp:
+    handler: src/handler.getOrderApiGateway
     events:
-      - httpApi: get /getMovie
+      - httpApi: get /getOrders/{nombreCliente}
+
+  addOrderHttp:
+    handler: src/handler.addOrderApigateway
+    events:
+      - httpApi: post /saveOrder
 
 plugins:
   - serverless-offline

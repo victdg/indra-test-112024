@@ -1,6 +1,6 @@
 import { InfrastructureResponse } from "../../../domain/models/InfrastructureResponse";
 import { constants } from "../../../utils";
-import { DynamoClient } from "./DynamoDBClient";
+import { CustomDynamoClient } from "./DynamoDBClient";
 import { OrderDataModel } from "./OrderDataModel";
 import { OrdersRepositoryInterface } from "./OrdersRepositoryInterface";
 import {
@@ -10,9 +10,9 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 
 export class OrdersRepositoryServices implements OrdersRepositoryInterface {
-  dynamoCLient: DynamoClient;
+  dynamoCLient: CustomDynamoClient;
 
-  constructor(dynamoClient) {
+  constructor(dynamoClient: CustomDynamoClient) {
     this.dynamoCLient = dynamoClient;
   }
 
@@ -30,6 +30,7 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
       const sendResponse = (await this.dynamoCLient.send(
         new QueryCommand(params)
       )) as QueryCommandOutput;
+      console.log("sendResponse::>>", sendResponse);
 
       if (sendResponse.Items === undefined || sendResponse.Items.length === 0) {
         return {
@@ -42,7 +43,7 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
         data: sendResponse.Items as Array<OrderDataModel>,
       };
     } catch (error) {
-      console.log(error.message);
+      console.log("getCommand error::>>", error.message);
       return {
         statusCode: constants.CODES[503].statusCode,
         message: error.message,
@@ -60,10 +61,11 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
       };
 
       this.dynamoCLient.start();
+      console.log("putCommand Repo params::>>", params);
       await this.dynamoCLient.send(new PutCommand(params));
       return { statusCode: constants.CODES[200].statusCode };
     } catch (error) {
-      console.log(error.message);
+      console.log("putCommand error::>>", error.message);
       return {
         statusCode: constants.CODES[503].statusCode,
         message: error.message,
