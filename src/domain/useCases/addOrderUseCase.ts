@@ -41,7 +41,7 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
 
       if (getFilmResponse.statusCode === constants.CODES[404].statusCode) {
         return responseObjectMaker({
-          statusCode: constants.CODES[404].statusCode,
+          statusCode: constants.CODES[422].statusCode,
           message: `No se encontró el idEpisodio: ${request.body.idEpisodio}`,
         });
       }

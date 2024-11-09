@@ -1,0 +1,21 @@
+Se realizó el desarrollo con la lógica de negocio:
+
+Guardado de compra de pelicula
+path: saveOrder
+Se registran las compras de peliculas, se detalla el nombre del cliente y el idEpisodio que tiene el servicio de films a través de la url: https://swapi.py4e.com/api/films/episodio/, donde episodio es el id. Body que se envía:
+{
+"nombreCliente": "victorzubiaga",
+"idEpisodio": 4
+}
+Proceso: se recibe el body, se hacen validaciones de parámetros, sino son validos se retorna 400, se consulta al servicio de films por la pelicula que tiene asociado el idEpisodio. Si no se encuentra, el servicio retorna 422. Si se encuentra se procede a hacer el cambio de atributos de inglés a español, se registra en la base de datos - dynamoDB - y se retorna 200. En caso hayan fallas al intentar grabar se retorna 503
+
+Consulta de peliculas compradas por cliente
+path: getOrders/{nombreCliente}
+Se consulta la lista de ordenes registradas en el servicio anterior. Sino hay registros se retorna 404, de lo contrario 200 con la información recuperada.
+
+Para hacer deploy se necesita tener configurado las credenciales de manera local, con esto ejecutar
+serverless deploy
+Se trabajó con:
+1 Typescript
+2 DynamoDB
+3 axios

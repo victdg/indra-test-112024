@@ -4,7 +4,7 @@
   "description": "Evaluación técnica",
   "main": "index.js",
   "scripts": {
-    "dev": "serverless offline"
+    "deploy": "serverless deploy"
   },
   "keywords": [],
   "author": "",

@@ -8,6 +8,7 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - dynamodb:PutItem
         - dynamodb:Query
       Resource:
         - "*"

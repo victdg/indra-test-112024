@@ -21,10 +21,8 @@ export class SwapiServices implements FilmServicesInterface {
     } catch (error) {
       console.log("Swapi Service error::>>", error);
       return {
-        statusCode: error.response.statusCode,
+        statusCode: error.response.status,
       };
     }
-
-    throw new Error("Method not implemented.");
   }
 }
