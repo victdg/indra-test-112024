@@ -6,9 +6,6 @@ export const AddOrderApiGatewayHandlerMaker =
   (useCase: AddOrderUseCaseType) =>
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-      console.log("Hello from AddOrder");
-      console.log("event::>>", event);
-
       if (!event.body) {
         const { statusCode, code, message } = constants.CODES[400];
         return { statusCode, body: JSON.stringify({ code, message }) };

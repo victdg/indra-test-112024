@@ -30,7 +30,6 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
       const sendResponse = (await this.dynamoCLient.send(
         new QueryCommand(params)
       )) as QueryCommandOutput;
-      console.log("sendResponse::>>", sendResponse);
 
       if (sendResponse.Items === undefined || sendResponse.Items.length === 0) {
         return {
@@ -61,7 +60,6 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
       };
 
       this.dynamoCLient.start();
-      console.log("putCommand Repo params::>>", params);
       await this.dynamoCLient.send(new PutCommand(params));
       return { statusCode: constants.CODES[200].statusCode };
     } catch (error) {

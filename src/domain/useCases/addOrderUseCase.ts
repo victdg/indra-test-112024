@@ -24,7 +24,6 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
     this.filmServices = filmServices;
   }
   async execute(request: AddOrderRequest) {
-    console.log("request::>>", request);
     try {
       if (
         request.body.idEpisodio === undefined ||
@@ -66,8 +65,6 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
         dataFilm: <Omit<DataFilmModel, "idEpisodio">>mapper(dataFilmInput),
       });
 
-      console.log("putOrderResponse::>>", putOrderResponse);
-
       if (putOrderResponse.statusCode !== constants.CODES[200].statusCode) {
         const statusCode = putOrderResponse.statusCode;
         return responseObjectMaker({
@@ -80,7 +77,6 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
         code: constants.CODES[200].code,
       });
     } catch (error) {
-      console.log("useCase error::>>", error.message);
       return responseObjectMaker({
         statusCode: constants.CODES[500].statusCode,
       });

@@ -20,7 +20,6 @@ export class GetOrderUseCase implements GetOrderUseCaseType {
   }
   async execute(request: GetOrderRequest) {
     try {
-      console.log("useCase request::>>", request);
       if (!request.pathParameters.nombreCliente) {
         return responseObjectMaker({
           statusCode: constants.CODES[400].statusCode,
@@ -31,7 +30,6 @@ export class GetOrderUseCase implements GetOrderUseCaseType {
         request.pathParameters.nombreCliente
       );
 
-      console.log("getOrderResponse::>>", getOrderResponse);
       if (getOrderResponse.statusCode === constants.CODES[404].statusCode) {
         return responseObjectMaker({ statusCode: getOrderResponse.statusCode });
       }
@@ -46,7 +44,6 @@ export class GetOrderUseCase implements GetOrderUseCaseType {
         data: getOrderResponse.data,
       });
     } catch (error) {
-      console.log("useCase error::>>", error.message);
       return responseObjectMaker({
         statusCode: constants.CODES[500].statusCode,
       });

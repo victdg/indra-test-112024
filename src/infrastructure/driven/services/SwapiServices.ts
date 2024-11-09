@@ -12,7 +12,6 @@ export class SwapiServices implements FilmServicesInterface {
       const axiosResponse: AxiosResponse = await axios.get(
         `${constants.FILMS_URL}/${idMovie}`
       );
-      console.log("axiosResponse::>>", axiosResponse);
       const film: FilmDataModel = axiosResponse.data;
       return {
         statusCode: constants.CODES[200].statusCode,
