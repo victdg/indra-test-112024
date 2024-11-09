@@ -1,0 +1,8 @@
+{
+  "all": true,
+  "reporter": "lcov",
+  "extension": [".ts"],
+  "exclude": ["test/*", "coverage/*", ".nyc_output/*"],
+  "temp-dir": "./.nyc_output",
+  "report-dir": "./coverage"
+}
