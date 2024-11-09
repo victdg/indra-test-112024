@@ -7,7 +7,7 @@ Se registran las compras de peliculas, se detalla el nombre del cliente y el idE
 "nombreCliente": "victorzubiaga",
 "idEpisodio": 4
 }
-Proceso: se recibe el body, se hacen validaciones de parámetros, sino son validos se retorna 400, se consulta al servicio de films por la pelicula que tiene asociado el idEpisodio. Si no se encuentra, el servicio retorna 422. Si se encuentra se procede a hacer el cambio de atributos de inglés a español, se registra en la base de datos - dynamoDB - y se retorna 200. En caso hayan fallas al intentar grabar se retorna 503
+Proceso: se recibe el body, se hacen validaciones de parámetros, sino son validos se retorna 400, se consulta al servicio de films por la pelicula que tiene asociado el idEpisodio. Si no se encuentra, el servicio retorna 422. Si se encuentra se procede a hacer el cambio de atributos de inglés a español, se registra en la base de datos - dynamoDB - el nombre del cliente, información de la pelicula recibida del servicio y se retorna 200. En caso hayan fallas al intentar grabar se retorna 503
 Este servicio permite comprar varias veces la misma pelicula
 
 Consulta de peliculas compradas por cliente
