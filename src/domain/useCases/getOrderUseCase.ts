@@ -1,4 +1,3 @@
-import { DataFilmModel } from "../../infrastructure/driven/repositories/OrderDataModel";
 import { OrdersRepositoryInterface } from "../../infrastructure/driven/repositories/OrdersRepositoryInterface";
 import { constants, responseObjectMaker } from "../../utils";
 import { GetOrderRequest } from "../models/GetOrderRequest";
@@ -19,7 +18,6 @@ export class GetOrderUseCase implements GetOrderUseCaseType {
     this.ordersRepository = ordersRepository;
   }
   async execute(request: GetOrderRequest) {
-    console.log("v1");
     try {
       if (!request.pathParameters?.nombreCliente) {
         return responseObjectMaker({
