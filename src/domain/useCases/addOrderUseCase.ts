@@ -46,7 +46,6 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
       }
 
       if (getFilmResponse.statusCode !== constants.CODES[200].statusCode) {
-        const statusCode = getFilmResponse.statusCode;
         return responseObjectMaker({
           statusCode: constants.CODES[503].statusCode,
         });
@@ -66,7 +65,6 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
       });
 
       if (putOrderResponse.statusCode !== constants.CODES[200].statusCode) {
-        const statusCode = putOrderResponse.statusCode;
         return responseObjectMaker({
           statusCode: constants.CODES[503].statusCode,
         });
@@ -77,6 +75,7 @@ export class AddOrderUseCase implements AddOrderUseCaseType {
         code: constants.CODES[200].code,
       });
     } catch (error) {
+      console.log("putOrders useCase error::>>", error.message);
       return responseObjectMaker({
         statusCode: constants.CODES[500].statusCode,
       });

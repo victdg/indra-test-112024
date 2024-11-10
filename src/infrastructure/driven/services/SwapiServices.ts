@@ -13,15 +13,15 @@ export class SwapiServices implements FilmServicesInterface {
         `${constants.FILMS_URL}/${idMovie}`
       );
       const film: FilmDataModel = axiosResponse.data;
-      return {
+      return responseObjectMaker({
         statusCode: constants.CODES[200].statusCode,
         data: film,
-      };
+      });
     } catch (error) {
       console.log("Swapi Service error::>>", error);
-      return {
+      return responseObjectMaker({
         statusCode: error.response.status,
-      };
+      });
     }
   }
 }

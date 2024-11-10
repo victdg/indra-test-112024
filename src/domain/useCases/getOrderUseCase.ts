@@ -19,8 +19,9 @@ export class GetOrderUseCase implements GetOrderUseCaseType {
     this.ordersRepository = ordersRepository;
   }
   async execute(request: GetOrderRequest) {
+    console.log("v1");
     try {
-      if (!request.pathParameters.nombreCliente) {
+      if (!request.pathParameters?.nombreCliente) {
         return responseObjectMaker({
           statusCode: constants.CODES[400].statusCode,
         });
@@ -44,6 +45,7 @@ export class GetOrderUseCase implements GetOrderUseCaseType {
         data: getOrderResponse.data,
       });
     } catch (error) {
+      console.log("getOrders useCase error::>>", error.message);
       return responseObjectMaker({
         statusCode: constants.CODES[500].statusCode,
       });

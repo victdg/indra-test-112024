@@ -58,7 +58,7 @@ const dictionary = [
   ["director", "director"],
   ["producer", "productor"],
   ["release_date", "fechaPublicacion"],
-  ["characteres", "personajes"],
+  ["characters", "personajes"],
   ["planets", "planetas"],
   ["starships", "naves"],
   ["vehicles", "vehiculos"],

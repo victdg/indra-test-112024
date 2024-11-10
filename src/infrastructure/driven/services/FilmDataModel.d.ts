@@ -1,11 +1,11 @@
 export type FilmDataModel = {
   title: string;
   episode_id: number;
-  openning_crawl: string;
+  opening_crawl: string;
   director: string;
   producer: string;
   release_date: string;
-  characteres: Array<string>;
+  characters: Array<string>;
   planets: Array<string>;
   starships: Array<string>;
   vehicles: Array<string>;

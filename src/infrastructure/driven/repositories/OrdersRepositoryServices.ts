@@ -31,7 +31,13 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
         new QueryCommand(params)
       )) as QueryCommandOutput;
 
-      if (sendResponse.Items === undefined || sendResponse.Items.length === 0) {
+      if (sendResponse.Items === undefined) {
+        return {
+          statusCode: constants.CODES[404].statusCode,
+        };
+      }
+
+      if (sendResponse.Items.length === 0) {
         return {
           statusCode: constants.CODES[404].statusCode,
         };
@@ -58,7 +64,7 @@ export class OrdersRepositoryServices implements OrdersRepositoryInterface {
         TableName: constants.TABLE_NAME,
         Item: order,
       };
-
+      console.log(params);
       this.dynamoCLient.start();
       await this.dynamoCLient.send(new PutCommand(params));
       return { statusCode: constants.CODES[200].statusCode };
