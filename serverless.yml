@@ -37,12 +37,12 @@ functions:
   getOrdersHttp:
     handler: src/handler.getOrderApiGateway
     events:
-      - httpApi: get /getOrders/{nombreCliente}
+      - httpApi: get /orders/{nombreCliente}
 
   addOrderHttp:
     handler: src/handler.addOrderApigateway
     events:
-      - httpApi: post /saveOrder
+      - httpApi: post /orders
 
 plugins:
   - serverless-offline

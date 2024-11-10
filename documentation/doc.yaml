@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Star Wars Movie Orders 1.0
+  description: |-
+    Servicio que se encarga de gestionar las ordenes de compra de peliculas de la saga Star Wars. Se puede registrar orden de compra o consultar por una ya existente asociada a un cliente.
+
+  contact:
+    email: vic.tdg@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Star Wars Movie Orders API
+  url: http://swagger.io
+servers:
+  - url: https://8enwrzu916.execute-api.us-east-1.amazonaws.com/orders
+tags:
+  - name: orders
+    description: Ordenes de compras de peliculas de la saga de Star Wars
+
+paths:
+  /:
+    post:
+      tags:
+        - orders
+      summary: Registra las ordenes de compra guardadas en la BD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BodyOrdersPost"
+        required: true
+      responses:
+        200:
+          description: (OK) La información se guardó con éxito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExitoSaveOrder"
+        400:
+          description: (Bad Request). nombreCliente o idEpisodio inválido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestSaveOrder"
+        422:
+          description: (Processing Error). Error de procesamiento, idEpisodio no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProcessingErrorSaveOrder"
+        503:
+          $ref: "#/components/responses/InternalServerError"
+
+  /{nombreCliente}:
+    get:
+      tags:
+        - orders
+      summary: Consulta las ordenes de compra guardadas en la BD
+      parameters:
+        - name: nombreCliente
+          in: path
+          description: nombre del cliente, sin espacios
+          required: true
+          schema:
+            $ref: "#/components/schemas/nombreCliente"
+
+      responses:
+        200:
+          description: (OK).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersList"
+
+        404:
+          description: (Not Found). No se encuentran ordenes de compra del cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundGetOrder"
+        503:
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    OrdersList:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["SUCCESS"]
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              nombreCliente:
+                type: string
+                enum: ["PepitoPerez"]
+              idEpisodio:
+                type: number
+                enum: [7]
+              fechaRegistro:
+                type: string
+                enum: ["10/11/2024, 07:17:08"]
+              dataFilm:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    planetas:
+                      type: array
+                      items:
+                        type: string
+                        enum: ["https://swapi.py4e.com/api/planets/61/"]
+                    director:
+                      type: string
+                      enum: ["J. J. Abrams"]
+                    especies:
+                      type: array
+                      items:
+                        type: string
+                        enum: ["https://swapi.py4e.com/api/species/1/"]
+                    titulo:
+                      type: string
+                      enum: ["The Force Awakens"]
+                    naves:
+                      type: array
+                      items:
+                        type: string
+                        enum: ["https://swapi.py4e.com/api/starships/10/"]
+                    vehiculos:
+                      type: array
+                      items:
+                        type: string
+                        enum: ["https://swapi.py4e.com/api/vehicles/1/"]
+                    url:
+                      type: string
+                      enum: ["https://swapi.py4e.com/api/films/7/"]
+                    creado:
+                      type: string
+                      enum: ["2015-04-17T06:51:30.504780Z"]
+                    personajes:
+                      type: array
+                      items:
+                        type: string
+                        enum: ["https://swapi.py4e.com/api/people/1/"]
+                    editado:
+                      type: string
+                      enum: ["2015-12-17T14:31:47.617768Z"]
+                    introduccion:
+                      type: string
+                      enum:
+                        [
+                          "Luke Skywalker has vanished.\r\nIn his absence, the sinister\r\nFIRST ORDER has risen from\r\nthe...",
+                        ]
+                    productor:
+                      type: string
+                      enum: ["Kathleen Kennedy, J. J. Abrams, Bryan Burk"]
+                    fechaPublicacion:
+                      type: string
+                      enum: ["2015-12-11"]
+
+    BodyOrdersPost:
+      type: object
+      properties:
+        nombreCliente:
+          type: string
+          description: nombre del cliente, sin espacios
+          enum: ["PepitoPerez", "AlonsoUtrilla"]
+        idEpisodio:
+          type: number
+          description: id de la pelicula registrada en Swapi Films
+          enum: [1]
+
+    nombreCliente:
+      type: string
+      enum: ["PepitoPerez", "AlonsoUtrilla"]
+
+    ExitoSaveOrder:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["SUCCESS"]
+    ProcessingErrorSaveOrder:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["PROCESSING ERROR"]
+        message:
+          type: string
+          enum: ["No se encuentra el episodio: {idEpisodio}"]
+    NotFoundGetOrder:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["NOT FOUND"]
+        message:
+          type: string
+          enum: ["No encontrado"]
+    BadRequestSaveOrder:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["BAD REQUEST"]
+        message:
+          type: string
+          enum: ["Parámetros Invalidos"]
+    InternalServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["INTERNAL SERVER ERROR"]
+        message:
+          type: string
+          enum: ["Servicio no disponible"]
+
+  responses:
+    InternalServerError:
+      description: (Internal Error) Error interno
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InternalServerError"
